@@ -35,25 +35,33 @@ export default function Home() {
   const [launching, setLaunching] = useState("");
   const [launchMessage, setLaunchMessage] = useState("");
 
+ 
   useEffect(() => {
     async function loadGames() {
+      console.log("LOAD GAMES DIMULAI");
+
       try {
+        setLoading(true);
+
         const response = await fetch("/api/games", {
           cache: "no-store",
         });
+
+        console.log("STATUS API:", response.status);
 
         if (!response.ok) {
           throw new Error("Gagal mengambil daftar game.");
         }
 
-        const data: { games: Game[] } = await response.json();
+        const data = await response.json();
         setGames(data.games);
         setError("");
       } catch (err) {
+        console.error("GAGAL MEMUAT GAME:", err);
         setError(
           err instanceof Error
             ? err.message
-            : "Terjadi kesalahan saat mengambil game."
+            : "Terjadi kesalahan saat memuat game."
         );
       } finally {
         setLoading(false);
