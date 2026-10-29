@@ -1,55 +1,43 @@
 
 import { NextResponse } from "next/server";
-import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
-import path from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const execFileAsync = promisify(execFile);
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const id = body?.id;
 
-    if (id !== "zzz") {
+    if (body?.id !== "zzz") {
       return NextResponse.json(
         { error: "Game tidak terdaftar atau tidak diizinkan." },
         { status: 400 }
       );
     }
 
-    const executablePath =
-      "D:\\program\\ZZZ\\HoYoPlay\\launcher.exe";
-
-    if (!existsSync(executablePath)) {
-      return NextResponse.json(
-        { error: "HoYoPlay launcher tidak ditemukan di laptop." },
-        { status: 404 }
-      );
-    }
-
-    const child = spawn(executablePath, [], {
-      cwd: path.dirname(executablePath),
-      detached: true,
-      stdio: "ignore",
-      windowsHide: false,
-    });
-
-    child.on("error", (error) => {
-      console.error("Gagal membuka HoYoPlay:", error);
-    });
-
-    child.unref();
+    await execFileAsync("schtasks.exe", [
+      "/run",
+      "/tn",
+      "CloudGame HoYoPlay",
+    ]);
 
     return NextResponse.json({
       success: true,
-      message: "Perintah membuka HoYoPlay telah dikirim.",
+      message: "Perintah menjalankan HoYoPlay berhasil dikirim.",
     });
-  } catch {
+  } catch (error) {
+    console.error("Gagal menjalankan tugas HoYoPlay:", error);
+
     return NextResponse.json(
-      { error: "Permintaan peluncuran tidak valid." },
-      { status: 400 }
+      {
+        error:
+          "Gagal menjalankan HoYoPlay. Periksa tugas CloudGame HoYoPlay di Task Scheduler.",
+      },
+      { status: 500 }
     );
   }
 }
