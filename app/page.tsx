@@ -278,42 +278,12 @@ export default function Home() {
                           {game.platform}
                         </span>                
                         <button
-                          onClick={async () => {
-                            setLaunching(game.id);
-                            setLaunchMessage("");
-
-                            try {
-                              const response = await fetch("/api/launch", {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({ id: game.id }),
-                              });
-
-                              const data = await response.json();
-
-                              if (!response.ok) {
-                                throw new Error(data.error ?? "Gagal membuka game.");
-                              }
-
-                              setLaunchMessage(
-                                "HoYoPlay sudah diminta untuk dibuka. Jika launchernya muncul, tekan Play untuk menjalankan ZZZ."
-                              );
-                            } catch (error) {
-                              setLaunchMessage(
-                                error instanceof Error
-                                  ? error.message
-                                  : "Terjadi kesalahan."
-                              );
-                            } finally {
-                              setLaunching("");
-                            }
+                          onClick={() => {
+                            window.location.href = "/play";
                           }}
-                          disabled={launching === game.id}
-                          className="rounded-lg bg-violet-500/10 px-4 py-2 text-xs font-bold text-violet-300 transition hover:bg-violet-500 hover:text-white disabled:opacity-50"
+                          className="rounded-lg bg-violet-500/10 px-4 py-2 text-xs font-bold text-violet-300 transition hover:bg-violet-500 hover:text-white"
                         >
-                          {launching === game.id ? "Membuka..." : "Mainkan ↗"}
+                          Mainkan ↗
                         </button>
 
                       </div>
