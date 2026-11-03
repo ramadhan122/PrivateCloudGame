@@ -281,9 +281,10 @@ export default function Home() {
                           onClick={() => {
                             window.location.href = "/play";
                           }}
+                          disabled={launching === game.id}
                           className="rounded-lg bg-violet-500/10 px-4 py-2 text-xs font-bold text-violet-300 transition hover:bg-violet-500 hover:text-white"
                         >
-                          Mainkan ↗
+                          {launching === game.id ? "Menjalankan..." : "Mainkan ↗"}
                         </button>
 
                       </div>

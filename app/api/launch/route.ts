@@ -1,12 +1,9 @@
 
 import { NextResponse } from "next/server";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { spawn } from "node:child_process";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const execFileAsync = promisify(execFile);
 
 export async function POST(request: Request) {
   try {
@@ -19,24 +16,31 @@ export async function POST(request: Request) {
       );
     }
 
-    await execFileAsync("schtasks.exe", [
-      "/run",
-      "/tn",
-      "CloudGame HoYoPlay",
-    ]);
+    const launcher = spawn(
+      "D:\\program\\ZZZ\\HoYoPlay\\launcher.exe",
+      [],
+      {
+        cwd: "D:\\program\\ZZZ\\HoYoPlay",
+        detached: true,
+        stdio: "ignore",
+      }
+    );
+
+    launcher.on("error", (error) => {
+      console.error("Gagal menjalankan HoYoPlay:", error);
+    });
+
+    launcher.unref();
 
     return NextResponse.json({
       success: true,
-      message: "Perintah menjalankan HoYoPlay berhasil dikirim.",
+      message: "HoYoPlay berhasil dipanggil.",
     });
   } catch (error) {
-    console.error("Gagal menjalankan tugas HoYoPlay:", error);
+    console.error(error);
 
     return NextResponse.json(
-      {
-        error:
-          "Gagal menjalankan HoYoPlay. Periksa tugas CloudGame HoYoPlay di Task Scheduler.",
-      },
+      { error: "Gagal menjalankan HoYoPlay." },
       { status: 500 }
     );
   }
