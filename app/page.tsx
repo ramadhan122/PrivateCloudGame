@@ -15,7 +15,6 @@ type Game = {
   icon?: string;
 };
 
-
 const categories = [
   "Semua Game",
   "Action",
@@ -26,7 +25,6 @@ const categories = [
 ];
 
 export default function Home() {
-  
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Semua Game");
   const [games, setGames] = useState<Game[]>([]);
@@ -35,19 +33,14 @@ export default function Home() {
   const [launching, setLaunching] = useState("");
   const [launchMessage, setLaunchMessage] = useState("");
 
- 
   useEffect(() => {
     async function loadGames() {
-      console.log("LOAD GAMES DIMULAI");
-
       try {
         setLoading(true);
 
         const response = await fetch("/api/games", {
           cache: "no-store",
         });
-
-        console.log("STATUS API:", response.status);
 
         if (!response.ok) {
           throw new Error("Gagal mengambil daftar game.");
@@ -58,6 +51,7 @@ export default function Home() {
         setError("");
       } catch (err) {
         console.error("GAGAL MEMUAT GAME:", err);
+
         setError(
           err instanceof Error
             ? err.message
@@ -83,14 +77,15 @@ export default function Home() {
     return matchesSearch && matchesCategory;
   });
 
-
   return (
     <main className="min-h-screen bg-[#08090d] text-white">
+      {/* SIDEBAR */}
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 border-r border-white/[0.07] bg-[#0b0c12] px-6 py-8 lg:flex lg:flex-col">
         <a href="#" className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-600 text-xl shadow-lg shadow-violet-600/25">
             🎮
           </div>
+
           <div>
             <h1 className="text-xl font-black tracking-wide">
               CLOUD<span className="text-violet-400">GAME</span>
@@ -105,9 +100,11 @@ export default function Home() {
           <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600">
             Menu
           </p>
+
           <div className="flex items-center gap-3 rounded-xl bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300">
             <span>▦</span> Library Game
           </div>
+
           <div className="mt-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-zinc-500">
             <span>◷</span> Terakhir Dimainkan
           </div>
@@ -118,16 +115,20 @@ export default function Home() {
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
             <span className="text-xs font-semibold">Cloud PC</span>
           </div>
+
           <p className="mt-2 text-xs leading-5 text-zinc-500">
             Hubungkan ke PC gaming pribadimu untuk mulai bermain.
           </p>
+
           <div className="mt-4 rounded-lg bg-white/[0.05] px-3 py-2 text-center text-xs text-zinc-400">
             Sunshine + Moonlight
           </div>
         </div>
       </aside>
 
+      {/* MAIN CONTENT */}
       <div className="lg:pl-64">
+        {/* HEADER */}
         <header className="sticky top-0 z-10 border-b border-white/[0.07] bg-[#08090d]/90 px-5 py-4 backdrop-blur-xl sm:px-8">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <div className="lg:hidden">
@@ -145,6 +146,7 @@ export default function Home() {
               <span className="hidden text-xs text-zinc-500 sm:block">
                 PRIVATE CLOUD GAMING
               </span>
+
               <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
                 <span>👤</span>
               </div>
@@ -153,8 +155,10 @@ export default function Home() {
         </header>
 
         <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 sm:py-10">
+          {/* HERO */}
           <section className="relative overflow-hidden rounded-3xl border border-violet-400/20 bg-gradient-to-br from-violet-950 via-[#19132d] to-[#10111a] p-6 sm:p-10 lg:p-12">
             <div className="pointer-events-none absolute -right-12 -top-20 h-64 w-64 rounded-full bg-violet-500/20 blur-3xl" />
+
             <div className="pointer-events-none absolute bottom-0 right-20 h-32 w-48 rounded-full bg-blue-500/10 blur-3xl" />
 
             <div className="relative max-w-2xl">
@@ -191,15 +195,18 @@ export default function Home() {
             </div>
           </section>
 
+          {/* GAME LIBRARY */}
           <section id="library" className="scroll-mt-24 pt-10">
             <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.25em] text-violet-400">
                   YOUR COLLECTION
                 </p>
+
                 <h2 className="mt-2 text-2xl font-black sm:text-3xl">
                   Library Game
                 </h2>
+
                 <p className="mt-2 text-sm text-zinc-500">
                   Temukan game yang ingin kamu mainkan.
                 </p>
@@ -211,11 +218,13 @@ export default function Home() {
               </div>
             </div>
 
+            {/* SEARCH */}
             <div className="mt-7">
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
                   ⌕
                 </span>
+
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
@@ -224,6 +233,7 @@ export default function Home() {
                 />
               </div>
 
+              {/* CATEGORY FILTER */}
               <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
                 {categories.map((item) => (
                   <button
@@ -241,6 +251,7 @@ export default function Home() {
               </div>
             </div>
 
+            {/* GAME CARDS */}
             {loading ? (
               <div className="mt-10 py-12 text-center text-sm text-zinc-400">
                 Memuat daftar game...
@@ -250,43 +261,64 @@ export default function Home() {
                 {error}
               </div>
             ) : filteredGames.length > 0 ? (
-              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-6 flex flex-wrap items-start gap-5">
                 {filteredGames.map((game) => (
                   <article
                     key={game.id}
-                    className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-[#101118] transition duration-300 hover:-translate-y-1 hover:border-violet-400/40"
+                    className="group w-48 max-w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#101118] transition duration-300 hover:-translate-y-1 hover:border-violet-400/40"
                   >
+                    {/* GAME IMAGE */}
                     <div
-                      className={`relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br ${game.color ?? "from-violet-950 via-slate-900 to-zinc-950"}`}
+                      className={`relative flex h-40 w-full items-center justify-center overflow-hidden bg-gradient-to-br ${
+                        game.color ??
+                        "from-violet-950 via-slate-900 to-zinc-950"
+                      }`}
                     >
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_65%)]" />
-                      <span className="relative text-7xl transition duration-300 group-hover:scale-110">
-                        {game.icon ?? "🎮"}
-                      </span>
-                      <span className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-200 backdrop-blur">
+
+                      {game.id === "zzz" ? (
+                        <img
+                          src="https://preview.redd.it/zenless-zone-zero-icon-v0-9ss6qz6tuwx81.png?width=1080&crop=smart&auto=webp&s=3818f47bf93f33a46ec714258e552ac0363873c6"
+                          alt="Zenless Zone Zero"
+                          className="relative h-full w-full object-contain object-center transition duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <span className="relative text-6xl transition duration-300 group-hover:scale-105 sm:text-7xl">
+                          {game.icon ?? "🎮"}
+                        </span>
+                      )}
+
+                      <span className="absolute left-3 top-3 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-200 backdrop-blur">
                         {game.category}
                       </span>
                     </div>
 
-                    <div className="p-5">
-                      <h3 className="font-bold tracking-wide">{game.title}</h3>
+                    {/* GAME INFORMATION */}
+                    <div className="p-4">
+                      <h3 className="truncate text-sm font-bold tracking-wide">
+                        {game.title}
+                      </h3>
+
                       <p className="mt-2 min-h-10 text-xs leading-5 text-zinc-500">
                         {game.description}
                       </p>
-                      <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4">
-                        <span className="text-[10px] text-zinc-500">
+
+                      <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/[0.07] pt-3">
+                        <span className="truncate text-[10px] text-zinc-500">
                           {game.platform}
-                        </span>                
+                        </span>
+
                         <button
                           onClick={() => {
                             window.location.href = "/play";
                           }}
                           disabled={launching === game.id}
-                          className="rounded-lg bg-violet-500/10 px-4 py-2 text-xs font-bold text-violet-300 transition hover:bg-violet-500 hover:text-white"
+                          className="shrink-0 rounded-lg bg-violet-500/10 px-3 py-2 text-xs font-bold text-violet-300 transition hover:bg-violet-500 hover:text-white"
                         >
-                          {launching === game.id ? "Menjalankan..." : "Mainkan ↗"}
+                          {launching === game.id
+                            ? "Menjalankan..."
+                            : "Mainkan ↗"}
                         </button>
-
                       </div>
                     </div>
                   </article>
@@ -295,7 +327,9 @@ export default function Home() {
             ) : (
               <div className="mt-6 rounded-2xl border border-dashed border-white/10 py-16 text-center">
                 <p className="text-3xl">🔎</p>
-                <p className="mt-3 font-semibold">Game tidak ditemukan</p>
+                <p className="mt-3 font-semibold">
+                  Game tidak ditemukan
+                </p>
                 <p className="mt-1 text-sm text-zinc-500">
                   Coba kata kunci atau kategori lain.
                 </p>
@@ -309,6 +343,7 @@ export default function Home() {
             )}
           </section>
 
+          {/* FOOTER */}
           <footer className="mt-14 border-t border-white/[0.07] py-7 text-center text-xs text-zinc-600">
             CLOUDGAME · PRIVATE CLOUD GAMING · YOUR GAMES, YOUR PC
           </footer>
